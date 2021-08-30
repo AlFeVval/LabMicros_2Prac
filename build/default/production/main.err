@@ -1,0 +1,4 @@
+Warning[207] D:\PROJECTOS\P2.X\MAIN.ASM 72 : Found label after column 1. (TEMP)
+Warning[207] D:\PROJECTOS\P2.X\MAIN.ASM 73 : Found label after column 1. (TIMER)
+Warning[207] D:\PROJECTOS\P2.X\MAIN.ASM 81 : Found label after column 1. (ADPCFG)
+Warning[202] D:\PROJECTOS\P2.X\MAIN.ASM 175 : Argument out of range.  Least significant bits used.

@@ -1,0 +1,77 @@
+MPLINK 5.09, LINKER
+Linker Map File - Created Mon Aug 30 13:13:47 2021
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x0000be
+                   .cinit    romdata   0x0000be    program   0x000002
+.config_300000_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300000    program   0x000001
+.config_300001_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300001    program   0x000001
+.config_300002_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300002    program   0x000001
+.config_300003_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300003    program   0x000001
+.config_300005_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300005    program   0x000001
+.config_300006_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300006    program   0x000001
+.config_300008_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300008    program   0x000001
+.config_300009_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300009    program   0x000001
+.config_30000A_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000a    program   0x000001
+.config_30000B_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000b    program   0x000001
+.config_30000C_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000c    program   0x000001
+.config_30000D_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000d    program   0x000001
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x0000bf      
+                            0x300000    0x300003      
+                            0x300005    0x300006      
+                            0x300008    0x30000d      
+            204 out of 33048 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     BASE   0x00000e    program     static D:\Projectos\P2.X\main.asm
+                   DECODE   0x00001c    program     static D:\Projectos\P2.X\main.asm
+                    DELAY   0x0000b0    program     static D:\Projectos\P2.X\main.asm
+                  D_EIGHT   0x000098    program     static D:\Projectos\P2.X\main.asm
+                   D_FIVE   0x000080    program     static D:\Projectos\P2.X\main.asm
+                   D_FOUR   0x000078    program     static D:\Projectos\P2.X\main.asm
+                   D_NINE   0x0000a0    program     static D:\Projectos\P2.X\main.asm
+                    D_ONE   0x000060    program     static D:\Projectos\P2.X\main.asm
+                  D_SEVEN   0x000090    program     static D:\Projectos\P2.X\main.asm
+                    D_SIX   0x000088    program     static D:\Projectos\P2.X\main.asm
+                  D_THREE   0x000070    program     static D:\Projectos\P2.X\main.asm
+                    D_TWO   0x000068    program     static D:\Projectos\P2.X\main.asm
+                   D_ZERO   0x000058    program     static D:\Projectos\P2.X\main.asm
+               INITIALIZE   0x000004    program     static D:\Projectos\P2.X\main.asm
+                     MAIN   0x00000a    program     static D:\Projectos\P2.X\main.asm
+                TURN_NINE   0x0000a8    program     static D:\Projectos\P2.X\main.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+               INITIALIZE   0x000004    program     static D:\Projectos\P2.X\main.asm
+                     MAIN   0x00000a    program     static D:\Projectos\P2.X\main.asm
+                     BASE   0x00000e    program     static D:\Projectos\P2.X\main.asm
+                   DECODE   0x00001c    program     static D:\Projectos\P2.X\main.asm
+                   D_ZERO   0x000058    program     static D:\Projectos\P2.X\main.asm
+                    D_ONE   0x000060    program     static D:\Projectos\P2.X\main.asm
+                    D_TWO   0x000068    program     static D:\Projectos\P2.X\main.asm
+                  D_THREE   0x000070    program     static D:\Projectos\P2.X\main.asm
+                   D_FOUR   0x000078    program     static D:\Projectos\P2.X\main.asm
+                   D_FIVE   0x000080    program     static D:\Projectos\P2.X\main.asm
+                    D_SIX   0x000088    program     static D:\Projectos\P2.X\main.asm
+                  D_SEVEN   0x000090    program     static D:\Projectos\P2.X\main.asm
+                  D_EIGHT   0x000098    program     static D:\Projectos\P2.X\main.asm
+                   D_NINE   0x0000a0    program     static D:\Projectos\P2.X\main.asm
+                TURN_NINE   0x0000a8    program     static D:\Projectos\P2.X\main.asm
+                    DELAY   0x0000b0    program     static D:\Projectos\P2.X\main.asm
+
+
