@@ -69,10 +69,8 @@
 
 
 ;****************Variables Definition*********************************
-    TEMP		EQU	0x50			;Reservamos espacio para un registro temporal 
-    TEMP2		EQU	0x51			;Reservamos mas espacio para otro registro temporal
-    CONSTANT		MASKa =	0xF0			;Mascara que delimitara los bits mas significativos
-    CONSTANT		MASKb =	0x0F			;Mascara que delimitara los bits menos significativos
+    TEMP		EQU	0x50			;Reservamos espacio para un registro temporal
+    TIMER		EQU	0x60			;	
 ;****************Main code*****************************
 			ORG     0x000             	;reset vector
   			GOTO    MAIN              	;go to the main routine
@@ -86,49 +84,99 @@ INITIALIZE:
 MAIN:
 			CALL 	INITIALIZE
 
-BASE:	
-
-			MOVF	PORTB, 0		;PORTB es movido a WREG para nuestro dato 1
-			ANDLW	MASKa			;Aplicamos mascara para los bits mas significativos
-			MOVWF	TEMP			;Actualizamos el valor ya delimitado en temporal
-			RRNCF	TEMP,W	   		;Corremos un bit de dicho valor
-			MOVWF	TEMP			;Nueva actualizacion
-			RRNCF	TEMP,W	   		;Nuevo Corrimiento
-			MOVWF	TEMP			;Nueva actualizacion
-			RRNCF	TEMP,W	   		;Ultimo corrimiento
-			MOVWF	TEMP			;Ultima actualizacion
-			MOVF	PORTB,0			;PORRTB es leido nuevamente para nuestro dato2
-			ANDLW	MASKb			;Aplicamos mascara para los bits mas significativos
-			MOVWF	TEMP2			;Actualizamos el valor del temporal 2
-			RLNCF	TEMP2,W			;Hacemos un corrimiento a la izquierda (desconozco por que esta corrido a la derecha una vez)
-			MOVWF	TEMP2			;Actualizo el dato
-			MOVF	TEMP2,W			;Muevo el temporal 2 a WREG
-			ADDWF	TEMP,0			;Sumo lo que haya en WREG con temporal 1
-			BC	CARRY_EVENT		;Si hay carry llama al evento para mostrarlo
-			CALL	DECODE			;Llamamos la función de decodificación
-			MOVWF	PORTD			;Muestra el resultado codificado
+BASE:
+			MOVF	TEMP,W			;
+			BZ	TURN_NINE 		;
+			DECF	TEMP			;
+			CALL	DECODE			;
+			;CALL	DELAY			;
 			GOTO 	BASE			;infinite loop
 
 DECODE:
-			ADDWF	PCL,1			;
-			RETLW	b'01111110'		;//0
-			RETLW	b'00110000'		;//1
-			RETLW	b'01101101'		;//2
-			RETLW	b'01111001'		;//3
-			RETLW	b'00110011'		;//4
-			RETLW	b'01011011'		;//5
-			RETLW	b'01011111'		;//6
-			RETLW	b'01110000'		;//7
-			RETLW	b'01111111'		;//8
-			RETLW	b'01110011'		;//9
-			RETLW	b'01110111'		;//A
-			RETLW	b'00011111'		;//B
-			RETLW	b'01001110'		;//C
-			RETLW	b'00111101'		;//D
-			RETLW	b'01001111'		;//E
-			RETLW	b'01000111'		;//F
+			MOVLW	0x00			;
+			SUBWF	TEMP,0			;
+			BZ	D_ZERO			;
+			MOVLW	0x01			;
+			SUBWF	TEMP,0			;
+			BZ	D_ONE			;
+			MOVLW	0x02			;
+			SUBWF	TEMP,0		;
+			BZ	D_TWO			;
+			MOVLW	0x03			;
+			SUBWF	TEMP,0			;
+			BZ	D_THREE			;
+			MOVLW	0x04			;
+			SUBWF	TEMP,0			;
+			BZ	D_FOUR			;
+			MOVLW	0x05			;
+			SUBWF	TEMP,0			;
+			BZ	D_FIVE			;
+			MOVLW	0x06			;
+			SUBWF	TEMP,0			;
+			BZ	D_SIX			;
+			MOVLW	0x07			;
+			SUBWF	TEMP,0			;
+			BZ	D_SEVEN			;
+			MOVLW	0x08			;
+			SUBWF	TEMP,0			;
+			BZ	D_EIGHT			;
+			MOVLW	0x09			;
+			SUBWF	TEMP,0			;
+			BZ	D_NINE			;	
+			RETURN;
 			
-CARRY_EVENT:
-			RETLW  b'10000000'		;
+D_ZERO:
+			MOVLW	b'01111110'		;//0
+			MOVWF	PORTD			;
+			RETURN;
+D_ONE:
+			MOVLW	b'00110000'		;//1
+			MOVWF	PORTD			;
+			RETURN			;
+D_TWO:
+			MOVLW	b'01101101'		;//2
+			MOVWF	PORTD			;
+			RETURN		;
+D_THREE:
+			MOVLW	b'01111001'		;//3
+			MOVWF	PORTD			;
+			RETURN			;
+D_FOUR:
+			MOVLW	b'00110011'		;//4
+			MOVWF	PORTD			;
+			RETURN			;
+D_FIVE:
+			MOVLW	b'01011011'		;//5
+			MOVWF	PORTD			;
+			RETURN;
+D_SIX:
+			MOVLW	b'01011111'		;//6
+			MOVWF	PORTD			;
+			RETURN			;
+D_SEVEN:
+			MOVLW	b'01110000'		;//7
+			MOVWF	PORTD			;
+			RETURN			;
+D_EIGHT:
+			MOVLW	b'01111111'		;//8
+			MOVWF	PORTD			;
+			RETURN;
+D_NINE:
+			MOVLW	b'01111011'		;//9
+			MOVWF	PORTD			;
+			RETURN		;
+			
+TURN_NINE:
+			MOVLW	d'10'			;
+			MOVWF	TEMP			;
+			GOTO	BASE			;
+DELAY:
+			MOVLW	d'255'			;
+			MOVWF	TIMER			;
+			DECFSZ	TIMER			;
+			GOTO	DELAY			;
+			GOTO	BASE			;
 			
 			END                       	;end of the main program
+
+
