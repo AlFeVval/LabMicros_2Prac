@@ -70,14 +70,22 @@
 
 ;****************Variables Definition*********************************
     TEMP		EQU	0x50			;Reservamos espacio para un registro temporal
-    TIMER		EQU	0x60			;	
+    TM1			EQU	0x60			;	
+    TM2			EQU	0x70			;	
+    TM3			EQU	0x80			;
+    IDX			EQU	0x90			;
+    RLD			EQU	0xA0			;
 ;****************Main code*****************************
 			ORG     0x000             	;reset vector
   			GOTO    MAIN              	;go to the main routine
 INITIALIZE:
 			CLRF	TRISD			;Puerto D como salidas
 			ADPCFG = 0x01FF			;Puerto B trabaje como entradas digitales
-			SETF	TRISB			;Todo puerto B como entrada
+			CLRF	TRISC			;
+			BSF	TRISB, RB7		;Boton de subida
+			BSF	TRISB, RB6		;Boton de bajada
+			BCF	PORTB, RB7		;Definimos que inicie en 0 RB0
+			BCF	PORTB, RB6		;Definimos que inicie en 0 RB1
 			
 			RETURN				;end of initialization subroutine
 
@@ -89,7 +97,11 @@ BASE:
 			BZ	TURN_NINE 		;
 			DECF	TEMP			;
 			CALL	DECODE			;
-			;CALL	DELAY			;
+			BTFSC	PORTB,RB7
+			CALL	DEC_VEL			
+			BTFSC	PORTB,RB6
+			CALL	INC_VEL
+			CALL	VEL_TABLE			;
 			GOTO 	BASE			;infinite loop
 
 DECODE:
@@ -119,7 +131,7 @@ DECODE:
 			BZ	D_SEVEN			;
 			MOVLW	0x08			;
 			SUBWF	TEMP,0			;
-			BZ	D_EIGHT			;
+			BZ	D_EIGHT			;.
 			MOVLW	0x09			;
 			SUBWF	TEMP,0			;
 			BZ	D_NINE			;	
@@ -170,12 +182,122 @@ TURN_NINE:
 			MOVLW	d'10'			;
 			MOVWF	TEMP			;
 			GOTO	BASE			;
-DELAY:
-			MOVLW	d'255'			;
-			MOVWF	TIMER			;
-			DECFSZ	TIMER			;
-			GOTO	DELAY			;
-			GOTO	BASE			;
+
+DELAY_10S:
+			MOVLW	b'00001000'
+			MOVWF	PORTC			
+    			MOVLW	d'60'			;
+			MOVWF	TM1			;
+			MOVLW	D'236'			;
+		T310:	MOVWF	TM2			;
+		T210:	MOVWF	TM3			;
+		T110:	DECFSZ	TM3			;
+			GOTO	T110		        ;
+			DECFSZ	TM2			;
+			GOTO	T210			;
+			DECFSZ	TM1			;
+			GOTO	T310			;
+			RETURN				;
+			
+DELAY_5S:
+			MOVLW	b'00010000'
+			MOVWF	PORTC			
+    			MOVLW	d'30'			;
+			MOVWF	TM1			;
+			MOVLW	D'236'			;
+		T35:	MOVWF	TM2			;
+		T25:	MOVWF	TM3			;
+		T15:	DECFSZ	TM3			;
+			GOTO	T15		        ;
+			DECFSZ	TM2			;
+			GOTO	T25			;
+			DECFSZ	TM1			;
+			GOTO	T35			;
+			RETURN				;
+			
+DELAY_1S:
+			MOVLW	b'00100000'
+			MOVWF	PORTC			
+    			MOVLW	d'6'			;
+			MOVWF	TM1			;
+			MOVLW	D'236'			;
+		T3:	MOVWF	TM2			;
+		T2:	MOVWF	TM3			;
+		T1:	DECFSZ	TM3			;
+			GOTO	T1		        ;
+			DECFSZ	TM2			;
+			GOTO	T2			;
+			DECFSZ	TM1			;
+			GOTO	T3			;
+			RETURN				;
+			
+DELAY_500mS:
+			MOVLW	b'01000000'
+			MOVWF	PORTC			
+    			MOVLW	d'3'			;
+			MOVWF	TM1			;
+			MOVLW	D'236'			;
+		T305:	MOVWF	TM2			;
+		T205:	MOVWF	TM3			;
+		T105:	DECFSZ	TM3			;
+			GOTO	T105		        ;
+			DECFSZ	TM2	    		;
+			GOTO	T205			;
+			DECFSZ	TM1			;
+			GOTO	T305			;
+			RETURN				;
+			
+DELAY_100mS:
+			MOVLW	b'10000000'
+			MOVWF	PORTC			
+    			MOVLW	d'6'			;
+			MOVWF	TM1			;
+			MOVLW	D'75'			;
+		T301:	MOVWF	TM2			;
+		T201:	MOVWF	TM3			;
+		T101:	DECFSZ	TM3			;
+			GOTO	T101		        ;
+			DECFSZ	TM2			;
+			GOTO	T201			;
+			DECFSZ	TM1			;
+			GOTO	T301			;
+			RETURN				;
+			
+			
+			
+DEC_VEL:
+			MOVLW	0x04
+			SUBWF	IDX,0
+			BZ	DEC_VEL
+		    	BTFSC	PORTB,RB7
+			INCF	IDX
+			RETURN
+			
+INC_VEL:
+			MOVLW	0x00
+			SUBWF	IDX,0
+			BZ	INC_VEL
+			BTFSC	PORTB, RB6;
+			DECF	IDX
+			RETURN
+			
+VEL_TABLE:
+			MOVLW	0x00
+			SUBWF	IDX,0
+			BZ	DELAY_100mS
+			MOVLW	0x01
+			SUBWF	IDX,0
+			BZ	DELAY_500mS
+			MOVLW	0x02
+			SUBWF	IDX,0
+			BZ	DELAY_1S
+			MOVLW	0x03
+			SUBWF	IDX,0
+			BZ	DELAY_5S
+			MOVLW	0x04
+			SUBWF	IDX,0
+			BZ	DELAY_10S
+			RETURN
 			
 			END                       	;end of the main program
 
